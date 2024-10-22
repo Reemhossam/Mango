@@ -1,4 +1,4 @@
-using Mango.Web.Service;
+﻿using Mango.Web.Service;
 using Mango.Web.Service.IService;
 using Mango.Web.Utility;
 
@@ -9,7 +9,7 @@ builder.Services.AddControllersWithViews();
 //for inject httpClientFactory and configure httpClient
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient();
-builder.Services.AddHttpClient<ICouponService, CouponService>();
+builder.Services.AddHttpClient<ICouponService, CouponService>(); //هنا بنقول ان الكوبون هيستخدم ال httpclient
 
 SD.CouponAPIBase = builder.Configuration["ServiceUrls:CouponAPI"];
 builder.Services.AddScoped<IBaseService,BaseService>();
