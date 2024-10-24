@@ -36,5 +36,18 @@ namespace Mango.Services.AuthAPI.Controllers
             _response.Result = loginResponse;
             return Ok(_response);
         }
+        [HttpPost("assignRole")]
+        public async Task<IActionResult> AssignRole(RegistrationRequestDto model)
+        {
+            var loginResponse = await _authService.AssignRoleAsync(model.Email, model.Role);
+            if (loginResponse.User is null)
+            {
+                _response.IsSuccess = false;
+                _response.Message = "Username or Password is incorrect";
+                return BadRequest(_response);
+            }
+            _response.Result = loginResponse;
+            return Ok(_response);
+        }
     }
 }

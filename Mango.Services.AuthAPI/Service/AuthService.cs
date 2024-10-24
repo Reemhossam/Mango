@@ -6,8 +6,24 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Mango.Services.AuthAPI.Service
 {
-    public class AuthService(AppDbContext _db, UserManager<ApplicationUser> _userManager, RoleManager<IdentityRole> _roleManager) : IAuthService
+    public class AuthService(AppDbContext _db, UserManager<ApplicationUser> _userManager, RoleManager<IdentityRole> _roleManager, JwtTokenGenerator _jwtTokenGenerator) : IAuthService
     {
+        public async Task<bool> AssignRoleAsync(string email, string roleName)
+        {
+            ApplicationUser user = _db.ApplicationUsers.FirstOrDefault(u => u.Email.ToLower() == email.ToLower());
+            if (user is not null) 
+            { 
+                if(! await _roleManager.RoleExistsAsync(roleName))
+                {
+                    // create role as it is not exist
+                    await _roleManager.CreateAsync(new IdentityRole(roleName));
+                }
+                    await _userManager.AddToRoleAsync(user, roleName);
+                    return true;
+            }
+            return false;
+        }
+
         public async Task<LoginResponseDto> LoginAsync(LoginRequestDto loginRequestDto)
         {
             ApplicationUser user = await _userManager.FindByNameAsync(loginRequestDto.UserName);
@@ -24,7 +40,7 @@ namespace Mango.Services.AuthAPI.Service
                 PhoneNumber = user.PhoneNumber,
             };
             //Generate JWT token
-            string token = "";
+            string token =_jwtTokenGenerator.GenerateToken(user);
             return new LoginResponseDto() { User = userDto, Token = token };
         }
 

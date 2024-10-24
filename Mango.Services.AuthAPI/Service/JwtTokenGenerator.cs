@@ -10,22 +10,22 @@ using System.Text;
 
 namespace Mango.Services.AuthAPI.Service
 {
-    public class JwtTokenGenerator(JWTOptions jwtOption) : IJwtTokenGenerator
+    public class JwtTokenGenerator(IOptions<JWTOptions> jwtOption) : IJwtTokenGenerator
     {
-        public string GenerateToken(ApplicationUser applicationUseruser)
+        public string GenerateToken(ApplicationUser applicationUser)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(jwtOption.Secret);
+            var key = Encoding.ASCII.GetBytes(jwtOption.Value.Secret);
             var claimList = new List<Claim>()
             {
-                new Claim(JwtRegisteredClaimNames.Email, applicationUseruser.Email),
-                new Claim(JwtRegisteredClaimNames.Sub, applicationUseruser.Id),
-                new Claim(JwtRegisteredClaimNames.Name, applicationUseruser.UserName),
+                new Claim(JwtRegisteredClaimNames.Email, applicationUser.Email),
+                new Claim(JwtRegisteredClaimNames.Sub, applicationUser.Id),
+                new Claim(JwtRegisteredClaimNames.Name, applicationUser.UserName),
             };
             var tokenDescripter = new SecurityTokenDescriptor
             {
-                Issuer = jwtOption.Issuer,
-                Audience = jwtOption.Audience,
+                Issuer = jwtOption.Value.Issuer,
+                Audience = jwtOption.Value.Audience,
                 Subject = new ClaimsIdentity(claimList),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),SecurityAlgorithms.HmacSha256)
