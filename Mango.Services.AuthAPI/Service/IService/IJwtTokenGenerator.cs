@@ -5,6 +5,6 @@ namespace Mango.Services.AuthAPI.Service.IService
 {
     public interface IJwtTokenGenerator
     {
-        string GenerateToken(ApplicationUser applicationUseruser);
+        string GenerateToken(ApplicationUser applicationUseruser, IEnumerable<string>roles);
     }
 }

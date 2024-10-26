@@ -3,22 +3,28 @@ using Mango.Web.Service.IService;
 using Microsoft.Extensions.Http.Logging;
 using Newtonsoft.Json;
 using System.Net;
+using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Text.Json.Serialization;
 using static Mango.Web.Utility.SD;
 
 namespace Mango.Web.Service
 {
-    public class BaseService(IHttpClientFactory _httpClientFactory) : IBaseService
+    public class BaseService(IHttpClientFactory _httpClientFactory, ITokenProvidor _tokenProvidor) : IBaseService
     {
-        public async Task<ResponseDto?> SendAsync(RequestDto requestDto)
+        public async Task<ResponseDto?> SendAsync(RequestDto requestDto, bool withBearer = true)
         {
             try
             {
                 HttpClient client = _httpClientFactory.CreateClient("Mango");
                 HttpRequestMessage message = new();
                 message.Headers.Add("Accept", "application/json");
-                //token
+                //add token to header of request
+                if (withBearer)
+                {
+                    var token = _tokenProvidor.GetToken();
+                    message.Headers.Add("Authorization", $"Bearer {token}");
+                }
                 message.RequestUri = new Uri(requestDto.Url);
                 if (requestDto.Data != null)
                 {
