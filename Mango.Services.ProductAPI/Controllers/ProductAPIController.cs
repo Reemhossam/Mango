@@ -14,7 +14,6 @@ namespace Mango.Services.ProductAPI.Controllers
     {
         private ResponseDto _response = new();
         [HttpGet]
-        [Authorize]
         public ResponseDto Get()
         {
             try
@@ -32,7 +31,6 @@ namespace Mango.Services.ProductAPI.Controllers
 
         [HttpGet]
         [Route("{id:int}")]
-        [Authorize]
         public ResponseDto Get(int id)
         {
             try
@@ -52,7 +50,6 @@ namespace Mango.Services.ProductAPI.Controllers
 
         [HttpGet]
         [Route("GetByName/{name}")]
-        [Authorize]
         public ResponseDto GetByCode(string name)
         {
             try
