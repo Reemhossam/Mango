@@ -49,11 +49,46 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
                     }
                     else
                     {
-                        //cartDetailFromDb.Count += cartDto.CartDetailsDtos.First().co
+                        cartDetailFromDb.Count += cartDto.CartDetailsDtos.First().Count;
+                        await _db.SaveChangesAsync();
+                        //update for returning to result only
+                         cartDto.CartDetailsDtos.First().Count = cartDetailFromDb.Count;
+                         cartDto.CartDetailsDtos.First().CartHeaderId = cartHeaderFromDb.CartHeaderId;
+                         cartDto.CartDetailsDtos.First().CartDetailsId = cartDetailFromDb.CartDetailsId;
                     }
                 }
+                response.Result = cartDto;
             }
             catch (Exception ex) 
+            {
+                response.Message = ex.Message;
+                response.IsSuccess = false;
+            }
+            return response;
+        }
+
+        [HttpPost("RemoveCart")]
+        public async Task<ResponseDto> RemoveCart([FromBody]int cartDetailsId)
+        {
+            try
+            {
+               CartDetails cartDetails = _db.CartDetails.FirstOrDefault(d =>d.CartDetailsId == cartDetailsId);
+                //get count as if is a only item in cart we will remove header with detail
+                var totalCountOfCartItem = _db.CartDetails.Where(d=>d.CartHeaderId == cartDetails.CartHeaderId).Count();
+
+                if (totalCountOfCartItem == 1) 
+                {
+                    var cartHeaderForRemove= _db.CartHeaders.FirstOrDefault(h =>h.CartHeaderId==cartDetails.CartHeaderId);
+                    _db.CartHeaders.Remove(cartHeaderForRemove); //not need to remove cartDetail As relation between them cascede
+                }
+                else
+                {
+                    _db.CartDetails.Remove(cartDetails);
+                }
+                await _db.SaveChangesAsync();
+                response.Result = true;
+            }
+            catch (Exception ex)
             {
                 response.Message = ex.Message;
                 response.IsSuccess = false;
