@@ -76,7 +76,7 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
                 {
                     // there is header ,check if detail is exist  // كل مره الdetail دي بيبقي فيها product واحد عشان كده بنستخدم ال frist 
                     var cartDetailFromDb = _db.CartDetails.FirstOrDefault(d=> 
-                    d.ProductId == cartDto.CartDetailsDtos.First().ProductId && d.CartHeaderId == cartDto.CartHeaderDto.CartHeaderId);
+                    d.ProductId == cartDto.CartDetailsDtos.First().ProductId && d.CartHeaderId == cartHeaderFromDb.CartHeaderId);
                     if(cartDetailFromDb == null)
                     {
                         // create detail
@@ -134,7 +134,7 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
             return response;
         }
         [HttpPost("ApplyCoupon")]
-        public async Task<ResponseDto> ApplyCoupon(CartDto cartDto)
+        public async Task<ResponseDto> ApplyCoupon([FromBody] CartDto cartDto)
         {
             try
             {

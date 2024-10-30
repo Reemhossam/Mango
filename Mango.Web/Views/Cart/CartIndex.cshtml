@@ -1,4 +1,6 @@
 ﻿@model CartDto
+@if( Model.CartHeaderDto!= null && Model.CartDetailsDtos?.Count>0)
+{
 <form method="post">
     <br />
     <input asp-for="CartHeaderDto.CartHeaderId" hidden/>
@@ -90,4 +92,11 @@
             </div>
         </div>
     </div>
-</form>
+    </form>
+}
+else
+{
+    <div>
+         <p>Please add items to the card.</p>
+    </div>
+}
