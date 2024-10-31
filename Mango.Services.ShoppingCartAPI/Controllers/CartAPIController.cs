@@ -3,6 +3,7 @@ using Mango.Services.ShoppingCart.Models.Dto;
 using Mango.Services.ShoppingCartAPI.Data;
 using Mango.Services.ShoppingCartAPI.Models;
 using Mango.Services.ShoppingCartAPI.Models.Dto;
+using Mango.Services.ShoppingCartAPI.RabbitMQSender;
 using Mango.Services.ShoppingCartAPI.Service.IService;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,7 +15,8 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
 {
     [Route("api/cart")]
     [ApiController]
-    public class CartAPIController(AppDbContext _db, IMapper _mapper, IProductService _productService, ICouponService _couponService) : ControllerBase
+    public class CartAPIController(AppDbContext _db, IMapper _mapper, IProductService _productService, ICouponService _couponService,
+        IRabbitMQCartMessageSender _rabbitMQCartMessageSender, IConfiguration _configuration) : ControllerBase
     {
         ResponseDto response = new();
         [HttpGet("GetCart/{userId}")]
@@ -53,6 +55,7 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
             }
             return response;
         }
+
         [HttpPost("CartUpsert")]
         public async Task<ResponseDto> Upsert(CartDto cartDto)
         {
@@ -96,8 +99,26 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
                     }
                 }
                 response.Result = cartDto;
+                response.Message = "enter cartAPI controller";
             }
             catch (Exception ex) 
+            {
+                response.Message = ex.Message;
+                response.IsSuccess = false;
+            }
+            return response;
+        }
+
+        [HttpPost("EmailCartRequest")]
+        public async Task<ResponseDto> EmailCartRequest(CartDto cartDto)
+        {
+            try
+            {
+                _rabbitMQCartMessageSender.Send(cartDto, _configuration.GetValue<string>("QueueNames:Checkoutqueue"));
+                response.Result = true;
+                response.Message = "enter cartAPI controller";
+            }
+            catch (Exception ex)
             {
                 response.Message = ex.Message;
                 response.IsSuccess = false;

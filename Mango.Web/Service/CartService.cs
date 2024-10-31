@@ -7,14 +7,15 @@ namespace Mango.Web.Service
 {
     public class CartService(IBaseService _baseService) : ICartService
     {
-        public async Task<ResponseDto?> ApplyCouponAsync(CartDto cartDto)
+
+        public async Task<ResponseDto?> EmailCart(CartDto cartDto)
         {
             return await _baseService.SendAsync(new()
             {
                 ApiType = ApiType.POST,
-                Url = ShoppingCartAPIBase + "/api/cart/ApplyCoupon",
+                Url = ShoppingCartAPIBase + $"/api/cart/EmailCartRequest",
                 Data = cartDto
-            }) ;
+            });
         }
 
         public async Task<ResponseDto?> GetCartByUserIdAsync(string userId)
@@ -38,12 +39,30 @@ namespace Mango.Web.Service
 
         public async Task<ResponseDto?> UpsertCartAsync(CartDto cartDto)
         {
+            //return await _baseService.SendAsync(new()
+            //{
+            //    ApiType = ApiType.POST,
+            //    Url = ShoppingCartAPIBase + $"/api/cart/CartUpsert",
+            //    Data = cartDto
+            //});
+
             return await _baseService.SendAsync(new()
             {
                 ApiType = ApiType.POST,
-                Url = ShoppingCartAPIBase + $"/api/cart/CartUpsert",
+                Url = ShoppingCartAPIBase + $"/api/cart/EmailCartRequest",
                 Data = cartDto
             });
         }
+        public async Task<ResponseDto?> ApplyCouponAsync(CartDto cartDto)
+        {
+            return await _baseService.SendAsync(new()
+            {
+                ApiType = ApiType.POST,
+                Url = ShoppingCartAPIBase + $"/api/cart/ApplyCoupon",
+                Data = cartDto
+            });
+
+        }
+
     }
 }

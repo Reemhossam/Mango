@@ -1,4 +1,7 @@
 ﻿using Mango.MessageBus;
+using Newtonsoft.Json;
+using RabbitMQ.Client;
+using System.Text;
 
 namespace Mango.Services.ShoppingCartAPI.RabbitMQSender
 {
@@ -7,15 +10,28 @@ namespace Mango.Services.ShoppingCartAPI.RabbitMQSender
         private readonly string _hostname;
         private readonly string _username;
         private readonly string _password;
+        private IConnection _connection;
         public RabbitMQCartMessageSender()
         {
             _hostname = "localhost";
-            _hostname = "guest";
+            _password = "guest";
             _username = "guest";
         }
-        public void Send(BaseMessage message, string queueName)
+        public void Send(object message, string queueName)
         {
-            throw new NotImplementedException();
+            var factory = new ConnectionFactory
+            {
+                HostName = _hostname,
+                UserName = _username,
+                Password = _password
+            };
+            _connection = factory.CreateConnection();
+            using var channel = _connection.CreateModel();
+            channel.QueueDeclare(queue: queueName, durable: false, exclusive: false, autoDelete: false, arguments: null);
+
+            var json = JsonConvert.SerializeObject(message);
+            var body = Encoding.UTF8.GetBytes(json);
+            channel.BasicPublish(exchange:"",routingKey: queueName,basicProperties:null, body: body);
         }
     }
 }

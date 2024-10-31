@@ -24,6 +24,7 @@ namespace Mango.Web.Controllers
             }
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> ApplyCoupon(CartDto cartDto)
         {
@@ -59,6 +60,17 @@ namespace Mango.Web.Controllers
                 return cartDto;
             }
             return new();
+        }
+        [HttpPost]
+        public async Task<IActionResult> EmailCart(CartDto cartDto)
+        {
+            ResponseDto? response = await _cartService.EmailCart(cartDto);
+            if (response != null & response.IsSuccess)
+            {
+                TempData["success"] = "Email will be processed and send shortly.";
+                return RedirectToAction("CartIndex");
+            }
+            return View();
         }
     }
 }

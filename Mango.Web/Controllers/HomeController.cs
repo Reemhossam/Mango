@@ -65,7 +65,9 @@ namespace Mango.Web.Controllers
                 } 
             };
             ResponseDto? response = await _cartService.UpsertCartAsync(cartDto);
-            
+          //  ResponseDto? response = await _cartService.EmailCart(cartDto);
+
+
             if (response != null && response.IsSuccess)
             {
                 TempData["success"] = "Item Added To Shopping Cart";
