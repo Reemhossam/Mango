@@ -1,5 +1,6 @@
 using IdentityModel;
 using Mango.Web.Models;
+using Mango.Web.Service;
 using Mango.Web.Service.IService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -65,7 +66,6 @@ namespace Mango.Web.Controllers
                 } 
             };
             ResponseDto? response = await _cartService.UpsertCartAsync(cartDto);
-          //  ResponseDto? response = await _cartService.EmailCart(cartDto);
 
 
             if (response != null && response.IsSuccess)

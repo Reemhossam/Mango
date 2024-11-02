@@ -99,7 +99,6 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
                     }
                 }
                 response.Result = cartDto;
-                response.Message = "enter cartAPI controller";
             }
             catch (Exception ex) 
             {
@@ -116,7 +115,6 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
             {
                 _rabbitMQCartMessageSender.Send(cartDto, _configuration.GetValue<string>("QueueNames:Checkoutqueue"));
                 response.Result = true;
-                response.Message = "enter cartAPI controller";
             }
             catch (Exception ex)
             {

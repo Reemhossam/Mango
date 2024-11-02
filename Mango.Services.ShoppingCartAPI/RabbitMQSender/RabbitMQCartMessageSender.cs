@@ -19,19 +19,43 @@ namespace Mango.Services.ShoppingCartAPI.RabbitMQSender
         }
         public void Send(object message, string queueName)
         {
-            var factory = new ConnectionFactory
+            if (ConnectionExist()) 
             {
-                HostName = _hostname,
-                UserName = _username,
-                Password = _password
-            };
-            _connection = factory.CreateConnection();
-            using var channel = _connection.CreateModel();
-            channel.QueueDeclare(queue: queueName, durable: false, exclusive: false, autoDelete: false, arguments: null);
+                using var channel = _connection.CreateModel();
+                channel.QueueDeclare(queue: queueName, durable: false, exclusive: false, autoDelete: false, arguments: null);
 
-            var json = JsonConvert.SerializeObject(message);
-            var body = Encoding.UTF8.GetBytes(json);
-            channel.BasicPublish(exchange:"",routingKey: queueName,basicProperties:null, body: body);
+                var json = JsonConvert.SerializeObject(message);
+                var body = Encoding.UTF8.GetBytes(json);
+                channel.BasicPublish(exchange:"",routingKey: queueName,basicProperties:null, body: body);
+            }
+        }
+        private void CreateConnection()
+        {
+            try
+            {
+                var factory = new ConnectionFactory
+                {
+                    HostName = _hostname,
+                    UserName = _username,
+                    Password = _password
+                };
+                _connection = factory.CreateConnection();
+            }
+            catch (Exception ex) 
+            { 
+                //log error message
+            }
+
+        }
+        private bool ConnectionExist()
+        {
+            if (_connection != null) return true;
+            else
+            {
+                CreateConnection();
+                return _connection != null;
+            }
+
         }
     }
 }

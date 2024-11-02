@@ -39,17 +39,10 @@ namespace Mango.Web.Service
 
         public async Task<ResponseDto?> UpsertCartAsync(CartDto cartDto)
         {
-            //return await _baseService.SendAsync(new()
-            //{
-            //    ApiType = ApiType.POST,
-            //    Url = ShoppingCartAPIBase + $"/api/cart/CartUpsert",
-            //    Data = cartDto
-            //});
-
             return await _baseService.SendAsync(new()
             {
                 ApiType = ApiType.POST,
-                Url = ShoppingCartAPIBase + $"/api/cart/EmailCartRequest",
+                Url = ShoppingCartAPIBase + $"/api/cart/CartUpsert",
                 Data = cartDto
             });
         }

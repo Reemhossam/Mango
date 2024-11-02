@@ -1,4 +1,5 @@
 ﻿using Mango.Services.AuthAPI.Models.Dto;
+using Mango.Services.AuthAPI.RabbitMQSender;
 using Mango.Services.AuthAPI.Service.IService;
 using Mango.Services.AuthPI.Models.Dto;
 using Microsoft.AspNetCore.Authorization;
@@ -8,7 +9,7 @@ namespace Mango.Services.AuthAPI.Controllers
 {
     [Route("api/auth")]
     [ApiController]
-    public class AuthAPIController(IAuthService _authService) : ControllerBase
+    public class AuthAPIController(IAuthService _authService, IRabbitMQAuthMessageSender _rabbitMQAuthMessageSender) : ControllerBase
     {
         protected ResponseDto _response= new();
         [HttpPost("register")]
@@ -21,6 +22,7 @@ namespace Mango.Services.AuthAPI.Controllers
                 _response.Message = errorMessage;
                 return BadRequest(_response);
             }
+            _rabbitMQAuthMessageSender.Send(model.Email, "AuthQueue");
             return Ok(_response);
         }
 
