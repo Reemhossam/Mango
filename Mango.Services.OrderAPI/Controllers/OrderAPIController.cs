@@ -8,6 +8,8 @@ using Mango.Services.OrderAPI.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Stripe;
+using Stripe.Checkout;
 
 namespace Mango.Services.OrderAPI.Controllers
 {
@@ -17,7 +19,7 @@ namespace Mango.Services.OrderAPI.Controllers
     {
         ResponseDto response = new ResponseDto();
         
-       // [Authorize]
+        [Authorize]
         [HttpPost("CreateOrder")]
         public async Task<ResponseDto> CreateOrder(CartDto cartDto)
         {
@@ -31,7 +33,53 @@ namespace Mango.Services.OrderAPI.Controllers
                 _db.OrderHeaders.Add(orderCreated);
                 //_db.OrderDetails.AddRange(orderCreated.OrderDetails);
                 await _db.SaveChangesAsync();
-                response.Result = orderCreated.OrderHeaderId;
+                response.Result = orderCreated;
+            }
+            catch (Exception ex) 
+            { 
+                response.IsSuccess = false;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+
+        [Authorize]
+        [HttpPost("CreateStripeSession")]
+        public async Task<ResponseDto> CreateStripeSession([FromBody] StripeRequestDto stripeRequestDto)
+        {
+            try
+            {
+                var options = new Stripe.Checkout.SessionCreateOptions
+                {
+                    SuccessUrl = stripeRequestDto.ApprovedUrl,
+                    CancelUrl = stripeRequestDto.CancelUrl,
+                    LineItems = new List<Stripe.Checkout.SessionLineItemOptions>(),
+                    Mode = "payment",
+                };
+                foreach(var item in stripeRequestDto.orderHeader.OrderDetails)
+                {
+                    var sessionLineItem = new SessionLineItemOptions
+                    {
+                        PriceData = new SessionLineItemPriceDataOptions
+                        {
+                            UnitAmount = (long)(item.ProductPrice * 100),  //20.99 =>2099 to save as string
+                            Currency = "usd",
+                            ProductData = new SessionLineItemPriceDataProductDataOptions
+                            {
+                                Name = item.ProductName,
+                            }
+                        },
+                        Quantity = item.Count
+                    };
+                    options.LineItems.Add(sessionLineItem);
+                }
+                var service = new Stripe.Checkout.SessionService();
+                Session session= service.Create(options);
+                stripeRequestDto.StripeSessionUrl = session.Url;
+                OrderHeader orderHeader = _db.OrderHeaders.First(h =>h.OrderHeaderId == stripeRequestDto.orderHeader.OrderHeaderId);
+                orderHeader.StripeSessionId= session.Id;
+                _db.SaveChanges();
+                response.Result = stripeRequestDto;
             }
             catch (Exception ex) 
             { 

@@ -32,9 +32,21 @@ namespace Mango.Web.Controllers
             cart.CartHeaderDto.Phone = cartDto.CartHeaderDto.Phone;
 
             ResponseDto? response = await _orderService.CreateOrderAsync(cart);
+            OrderHeaderDto orderHeaderDto = JsonConvert.DeserializeObject<OrderHeaderDto>(Convert.ToString(response.Result));
             if (response != null & response.IsSuccess)
             {
                 //get stripe session and redirect to stripe to place order
+                var domain = Request.Scheme + "://" + Request.Host.Value + "/"; /* https://localhost/  */
+                StripeRequestDto stripeRequestDto = new()
+                {
+                    orderHeader = orderHeaderDto,
+                    ApprovedUrl = domain + $"cart/Confirmation?orderId={orderHeaderDto.OrderHeaderId}",
+                    CancelUrl = domain + "cart/Checkout",
+                };
+                var stripeResponse = _orderService.CreateStripeSessionAsync(stripeRequestDto);
+                StripeRequestDto stripeResponseResult = JsonConvert.DeserializeObject<StripeRequestDto>(Convert.ToString(stripeResponse.Result));
+                Response.Headers.Add("location", stripeResponseResult.StripeSessionUrl);
+                return new StatusCodeResult (303);  //meaning redirict to another page
             }
             return RedirectToAction("Checkout");
         }
