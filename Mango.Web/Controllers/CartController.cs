@@ -43,7 +43,7 @@ namespace Mango.Web.Controllers
                     ApprovedUrl = domain + $"cart/Confirmation?orderId={orderHeaderDto.OrderHeaderId}",
                     CancelUrl = domain + "cart/Checkout",
                 };
-                var stripeResponse = _orderService.CreateStripeSessionAsync(stripeRequestDto);
+                ResponseDto stripeResponse = await _orderService.CreateStripeSessionAsync(stripeRequestDto);
                 StripeRequestDto stripeResponseResult = JsonConvert.DeserializeObject<StripeRequestDto>(Convert.ToString(stripeResponse.Result));
                 Response.Headers.Add("location", stripeResponseResult.StripeSessionUrl);
                 return new StatusCodeResult (303);  //meaning redirict to another page
