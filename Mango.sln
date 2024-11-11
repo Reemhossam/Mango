@@ -25,7 +25,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mango.MessageBus", "Mango.M
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mango.Services.EmailAPI", "Mango.Services.EmailAPI\Mango.Services.EmailAPI.csproj", "{D62261DF-B512-4BE5-8BFA-E12771546339}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mango.Services.OrderAPI", "Mango.Services.OrderAPI\Mango.Services.OrderAPI.csproj", "{C817926E-04BD-4BA6-9111-02A2CC7FDEBE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mango.Services.OrderAPI", "Mango.Services.OrderAPI\Mango.Services.OrderAPI.csproj", "{C817926E-04BD-4BA6-9111-02A2CC7FDEBE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mango.Services.RewardAPI", "Mango.Services.RewardAPI\Mango.Services.RewardAPI.csproj", "{E4047C0F-B5D3-4FD8-BCFA-361C2EEBB6FB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mango.GatewaySolution", "Mango.GatewaySolution\Mango.GatewaySolution.csproj", "{9921817A-B78C-4959-A08A-2A6B82227DDC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -65,6 +69,14 @@ Global
 		{C817926E-04BD-4BA6-9111-02A2CC7FDEBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C817926E-04BD-4BA6-9111-02A2CC7FDEBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C817926E-04BD-4BA6-9111-02A2CC7FDEBE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4047C0F-B5D3-4FD8-BCFA-361C2EEBB6FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4047C0F-B5D3-4FD8-BCFA-361C2EEBB6FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4047C0F-B5D3-4FD8-BCFA-361C2EEBB6FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4047C0F-B5D3-4FD8-BCFA-361C2EEBB6FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9921817A-B78C-4959-A08A-2A6B82227DDC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9921817A-B78C-4959-A08A-2A6B82227DDC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9921817A-B78C-4959-A08A-2A6B82227DDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9921817A-B78C-4959-A08A-2A6B82227DDC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -78,6 +90,8 @@ Global
 		{903A2DD7-C3D5-454C-9170-C06CE89A38F8} = {C8C3227F-E41A-46AB-863E-19567479DC2F}
 		{D62261DF-B512-4BE5-8BFA-E12771546339} = {D7622C14-2B1A-40A0-A195-6B6085DC70F6}
 		{C817926E-04BD-4BA6-9111-02A2CC7FDEBE} = {D7622C14-2B1A-40A0-A195-6B6085DC70F6}
+		{E4047C0F-B5D3-4FD8-BCFA-361C2EEBB6FB} = {D7622C14-2B1A-40A0-A195-6B6085DC70F6}
+		{9921817A-B78C-4959-A08A-2A6B82227DDC} = {38A39623-E25C-478D-9B7C-24A34884020F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4FD3B4B0-640F-4A33-B103-075E8A60E57C}

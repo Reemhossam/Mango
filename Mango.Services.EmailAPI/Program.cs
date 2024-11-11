@@ -21,7 +21,7 @@ builder.Services.AddSingleton(new EmailService(optionBuilder.Options));
 
 builder.Services.AddHostedService<RabbitMQCartConsumer>();
 builder.Services.AddHostedService<RabbitMQAuthConsumer>();
-
+builder.Services.AddHostedService<RabbitMQOrderConsumer>();
 
 var app = builder.Build();
 

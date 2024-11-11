@@ -1,4 +1,5 @@
-﻿using Mango.Services.EmailAPI.Models.Dto;
+﻿using Mango.Services.EmailAPI.Messaging;
+using Mango.Services.EmailAPI.Models.Dto;
 
 namespace Mango.Services.EmailAPI.Service
 {
@@ -6,5 +7,6 @@ namespace Mango.Services.EmailAPI.Service
     {
         Task EmailCartAndLog(CartDto cartDto);
         Task EmailCartAndLog(string email);
+        Task LogOrderPlaced(RewardMessage rewardMessage);
     }
 }

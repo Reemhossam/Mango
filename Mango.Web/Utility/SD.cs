@@ -18,5 +18,19 @@
             PUT,
             DELETE
          }
+
+        //status of order
+        public const string Status_Pending = "Pending";
+        public const string Status_Approved = "Approved";
+        public const string Status_ReadyForPackup = "ReadyForPackup";
+        public const string Status_Completed = "Completed";
+        public const string Status_Refuned = "Refuned";
+        public const string Status_Cancelled = "Cancelled";
+
+        public enum ContentType
+        {
+            Json,
+            MultiPartFromData,
+        }
     }
 }

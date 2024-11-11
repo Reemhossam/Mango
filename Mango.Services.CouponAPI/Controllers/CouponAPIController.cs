@@ -82,12 +82,12 @@ namespace Mango.Services.CouponAPI.Controllers
                     _response.IsSuccess = false;
                 _db.Coupons.Add(obj);
                 _db.SaveChanges();
-               
+
                 var options = new Stripe.CouponCreateOptions
                 {
                     Duration = "once",
-                    Id = "free-period",
-                    AmountOff = (long)(couponDto.DiscountAmount*100),
+                    Id = couponDto.CouponCode,
+                    AmountOff = (long)(couponDto.DiscountAmount * 100),
                     Name = couponDto.CouponCode,
                     Currency = "usd"
                 };
@@ -138,7 +138,7 @@ namespace Mango.Services.CouponAPI.Controllers
                 _db.SaveChanges();
                 
                 var service = new Stripe.CouponService();
-                service.Delete("free-period");
+                service.Delete($"{obj.CouponCode}");
             }
             catch (Exception ex)
             {
